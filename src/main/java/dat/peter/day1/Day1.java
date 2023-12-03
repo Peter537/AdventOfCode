@@ -1,11 +1,11 @@
 package dat.peter.day1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Map;
-import java.util.Scanner;
+import dat.peter.Day;
 
-public class Day1 {
+import java.util.List;
+import java.util.Map;
+
+public class Day1 extends Day {
 
     private static final Map<String, Integer> map = Map.of(
             "one", 1,
@@ -19,60 +19,60 @@ public class Day1 {
             "nine", 9
     );
 
-    public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("src/main/java/dat/peter/day1/input.txt");
-        Scanner scanner = new Scanner(file);
-        long sum = 0;
-        int lineNumber = 1;
-        while (scanner.hasNextLine()) {
-            System.out.println("Linenumber: " + lineNumber++);
-            String line = scanner.nextLine();
-            String firstNum = "";
-            String lastNum = "";
-            // Part 1
-            /*
-            for (char c : line.toCharArray()) {
-                if (Character.isDigit(c)) {
-                    if (firstNum.isEmpty()) {
-                        firstNum = String.valueOf(c);
-                    }
-
-                    lastNum = String.valueOf(c);
+    private int findNumber(String line, boolean withWords) {
+        String firstNum = "";
+        String lastNum = "";
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (Character.isDigit(c)) {
+                if (firstNum.isEmpty()) {
+                    firstNum = String.valueOf(c);
                 }
-            }
-             */
 
-            // Part 2
-            for (int i = 0; i < line.length(); i++) {
-                char c = line.charAt(i);
-                if (Character.isDigit(c)) {
-                    if (firstNum.isEmpty()) {
-                        firstNum = String.valueOf(c);
+                lastNum = String.valueOf(c);
+            } else if (withWords) {
+                for (String s : map.keySet()) {
+                    if (line.length() < i + s.length()) {
+                        continue;
                     }
 
-                    lastNum = String.valueOf(c);
-                } else {
-                    for (String s : map.keySet()) {
-                        if (line.length() < i + s.length()) {
-                            continue;
+                    String substring = line.substring(i, i + s.length());
+                    if (s.equals(substring)) {
+                        if (firstNum.isEmpty()) {
+                            firstNum = String.valueOf(map.get(s));
                         }
 
-                        String substring = line.substring(i, i + s.length());
-                        if (s.equals(substring)) {
-                            if (firstNum.isEmpty()) {
-                                firstNum = String.valueOf(map.get(s));
-                            }
-
-                            lastNum = String.valueOf(map.get(s));
-                        }
+                        lastNum = String.valueOf(map.get(s));
                     }
                 }
             }
-
-            int num = Integer.parseInt(firstNum + lastNum);
-            System.out.println(num);
-            sum += num;
         }
-        System.out.println(sum);
+
+        return Integer.parseInt(firstNum + lastNum);
+    }
+
+    @Override
+    public int day() {
+        return 1;
+    }
+
+    @Override
+    public String partOne(List<String> input) {
+        int sum = 0;
+        for (String line : input) {
+            sum += findNumber(line, false);
+        }
+
+        return String.valueOf(sum);
+    }
+
+    @Override
+    public String partTwo(List<String> input) {
+        int sum = 0;
+        for (String line : input) {
+            sum += findNumber(line, true);
+        }
+
+        return String.valueOf(sum);
     }
 }
