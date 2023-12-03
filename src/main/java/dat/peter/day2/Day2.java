@@ -1,64 +1,91 @@
 package dat.peter.day2;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import dat.peter.Day;
 
-public class Day2 {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("src/main/java/dat/peter/day2/input.txt");
-        Scanner scanner = new Scanner(file);
-        int maxRedCubes = 12;
-        int maxGreenCubes = 13;
-        int maxBlueCubes = 14;
-        int sum = 0;
-        int power = 0;
-        while (scanner.hasNextLine()) {
-            String[] line = scanner.nextLine().split(": ");
-            int gameNumber = Integer.parseInt(line[0].split(" ")[1]);
-            System.out.println("GameNumber: " + gameNumber);
-            System.out.println("SumBefore: " + sum);
-            String[] subsets = line[1].split("; ");
-            boolean isPossible = true;
-            int lowestRed = 1;
-            int lowestGreen = 1;
-            int lowestBlue = 1;
-            for (String s : subsets) {
-                String[] cubes = s.trim().split(", ");
-                for (String s1 : cubes) {
-                    int num = Integer.parseInt(s1.split(" ")[0]);
-                    if (s1.contains("blue")) {
-                        if (num > maxBlueCubes) {
-                            isPossible = false;
-                        }
-                        if (num > lowestBlue) {
-                            lowestBlue = num;
-                        }
-                    } else if (s1.contains("red")) {
-                        if (num > maxRedCubes) {
-                            isPossible = false;
-                        }
-                        if (num > lowestRed) {
-                            lowestRed = num;
-                        }
-                    } else if (s1.contains("green")) {
-                        if (num > maxGreenCubes) {
-                            isPossible = false;
-                        }
-                        if (num > lowestGreen) {
-                            lowestGreen = num;
-                        }
+public class Day2 extends Day {
+
+    private static final Map<String, Integer> maxCubeMap = Map.of(
+            "red", 12,
+            "green", 13,
+            "blue", 14
+    );
+
+    public boolean isGamePossible(String game) {
+        boolean isPossible = true;
+        String[] subsets = game.split("; ");
+        for (String subset : subsets) {
+            String[] cubes = subset.trim().split(", ");
+            for (String cube : cubes) {
+                String[] cubeData = cube.split(" ");
+                int num = Integer.parseInt(cubeData[0]);
+                if (num > maxCubeMap.get(cubeData[1])) {
+                    isPossible = false;
+                }
+            }
+        }
+
+        return isPossible;
+    }
+
+    public int getPowerOfGame(String line) {
+        Map<String, Integer> powerMap = new HashMap<>();
+        String[] lineData = line.split(": ");
+        String[] subsets = lineData[1].split("; ");
+        for (String subset : subsets) {
+            String[] cubes = subset.trim().split(", ");
+            for (String cube : cubes) {
+                String[] cubeData = cube.split(" ");
+                int num = Integer.parseInt(cubeData[0]);
+                String color = cubeData[1];
+                if (!powerMap.containsKey(color)) {
+                    powerMap.put(color, num);
+                } else {
+                    if (num > powerMap.get(color)) {
+                        powerMap.put(color, num);
                     }
                 }
             }
-            if (isPossible) {
-                System.out.println("GameNumber isPossible: " + gameNumber);
+        }
+
+        int sum = 1;
+        for (int i : powerMap.values()) {
+            sum *= i;
+        }
+
+        return sum;
+    }
+
+    @Override
+    public int day() {
+        return 2;
+    }
+
+    @Override
+    public String partOne(List<String> input) {
+        int sum = 0;
+        for (String line : input) {
+            String[] lineSplit = line.split(": ");
+            if (isGamePossible(lineSplit[1])) {
+                int gameNumber = Integer.parseInt(lineSplit[0].split(" ")[1]);
                 sum += gameNumber;
             }
-            power += (lowestBlue * lowestGreen * lowestRed);
         }
-        System.out.println("Sum: " + sum);
-        System.out.println("Power: " + power);
+
+        return String.valueOf(sum);
+    }
+
+    @Override
+    public String partTwo(List<String> input) {
+        int sum = 0;
+        for (String line : input) {
+            int power = getPowerOfGame(line);
+            sum += power;
+        }
+
+        return String.valueOf(sum);
     }
 }
