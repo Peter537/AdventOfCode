@@ -1,76 +1,47 @@
 package dat.peter.day3;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.*;
+import dat.peter.Day;
 
-public class Day3 {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-    private static final Set<Character> characters = new HashSet<>();
+public class Day3 extends Day {
 
-    public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("src/main/java/dat/peter/day3/input.txt");
-//        file = new File("src/main/java/dat/peter/day3/sample.txt");
-        Scanner scanner = new Scanner(file);
-        char[][] data = new char[140][140];
-        List<String> lines = new ArrayList<>();
-        while (scanner.hasNextLine()) {
-            lines.add(scanner.nextLine());
-        }
+    private final Set<Character> characters = new HashSet<>();
 
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
+    public char[][] getGrid(List<String> input) {
+        char[][] grid = new char[140][140];
+        for (int i = 0; i < input.size(); i++) {
+            String line = input.get(i);
             for (int j = 0; j < line.length(); j++) {
-                data[i][j] = line.charAt(j);
-            }
-        }
-
-        for (char[] chars : data) {
-            for (char c : chars) {
+                char c = line.charAt(j);
+                grid[i][j] = c;
                 if (!Character.isDigit(c) && c != '.') {
-                    characters.add(c);
+                    this.characters.add(c);
                 }
             }
         }
 
-        int sum = 0;
-        // PART 1
+        return grid;
+    }
+
+    public List<Symbol> getSymbols(char[][] grid) {
         List<Symbol> symbols = new ArrayList<>();
-        for (int y = 0; y < data.length; y++) {
-            for (int x = 0; x < data[y].length; x++) {
-                char current = data[y][x];
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid[y].length; x++) {
+                char current = grid[y][x];
                 if (isSymbol(current)) {
                     symbols.add(new Symbol(current, x, y));
                 }
             }
         }
 
-        for (Symbol symbol : symbols) {
-            Set<Integer> numbers = numbersAdjacentTo(data, symbol);
-            int symbolSum = numbers.stream().reduce(0, Integer::sum);
-            sum += symbolSum;
-        }
-
-        // PART 2
-        int gearRatios = 0;
-        List<Symbol> gears = symbols.stream().filter(symbol -> symbol.symbol == '*').toList();
-        for (Symbol symbol : gears) {
-            Set<Integer> integers = numbersAdjacentTo(data, symbol);
-            if (integers.size() != 2) {
-                continue;
-            }
-
-            List<Integer> integerList = integers.stream().toList();
-            int gearRatio = integerList.get(0) * integerList.get(1);
-            gearRatios += gearRatio;
-        }
-
-        System.out.println("Sum: " + sum);
-        System.out.println("GearRatios: " + gearRatios);
-        System.out.println(characters);
+        return symbols;
     }
 
-    public static Set<Integer> numbersAdjacentTo(char[][] data, Symbol symbol) {
+    public Set<Integer> numbersAdjacentTo(char[][] data, Symbol symbol) {
         Set<Integer> numbers = new HashSet<>();
         for (int[] direction : symbol.adjacentPositions()) {
             int x = direction[0];
@@ -85,20 +56,15 @@ public class Day3 {
                 numbers.add(num);
             }
         }
+
         return numbers;
     }
 
-    public static boolean isSymbol(char c) {
-        for (char c1 : characters) {
-            if (c == c1) {
-                return true;
-            }
-        }
-
-        return false;
+    public boolean isSymbol(char c) {
+        return this.characters.stream().anyMatch(c1 -> c1 == c);
     }
 
-    public static int getNumber(char[][] data, int x, int y) {
+    public int getNumber(char[][] data, int x, int y) {
         int start = x;
         int end = x;
         while (start >= 0 && Character.isDigit(data[y][start])) {
@@ -116,19 +82,40 @@ public class Day3 {
         return Integer.parseInt(sb.toString());
     }
 
-    public record Symbol(char symbol, int x, int y) {
+    @Override
+    public int day() {
+        return 3;
+    }
 
-        public int[][] adjacentPositions() {
-            return new int[][]{
-                    {x - 1, y - 1},
-                    {x, y - 1},
-                    {x + 1, y - 1},
-                    {x - 1, y},
-                    {x + 1, y},
-                    {x - 1, y + 1},
-                    {x, y + 1},
-                    {x + 1, y + 1},
-            };
+    @Override
+    public String partOne(List<String> input) {
+        int sum = 0;
+        char[][] grid = getGrid(input);
+        for (Symbol symbol : getSymbols(grid)) {
+            Set<Integer> numbers = numbersAdjacentTo(grid, symbol);
+            int symbolSum = numbers.stream().reduce(0, Integer::sum);
+            sum += symbolSum;
         }
+
+        return String.valueOf(sum);
+    }
+
+    @Override
+    public String partTwo(List<String> input) {
+        int sum = 0;
+        char[][] grid = getGrid(input);
+        List<Symbol> gears = getSymbols(grid).stream().filter(symbol -> symbol.symbol() == '*').toList();
+        for (Symbol symbol : gears) {
+            Set<Integer> integers = numbersAdjacentTo(grid, symbol);
+            if (integers.size() != 2) {
+                continue;
+            }
+
+            List<Integer> integerList = integers.stream().toList();
+            int gearRatio = integerList.get(0) * integerList.get(1);
+            sum += gearRatio;
+        }
+
+        return String.valueOf(sum);
     }
 }
