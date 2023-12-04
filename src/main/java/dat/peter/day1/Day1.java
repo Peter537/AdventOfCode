@@ -19,17 +19,33 @@ public class Day1 extends Day {
             "nine", 9
     );
 
+    @Override
+    public int day() {
+        return 1;
+    }
+
+    @Override
+    public String partOne(List<String> input) {
+        return input.stream()
+                .map(line -> findNumber(line, false))
+                .reduce(0, Integer::sum)
+                .toString();
+    }
+
+    @Override
+    public String partTwo(List<String> input) {
+        return input.stream()
+                .map(line -> findNumber(line, true))
+                .reduce(0, Integer::sum)
+                .toString();
+    }
+
     private int findNumber(String line, boolean withWords) {
-        String firstNum = "";
-        String lastNum = "";
+        Number number = new Number();
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
             if (Character.isDigit(c)) {
-                if (firstNum.isEmpty()) {
-                    firstNum = String.valueOf(c);
-                }
-
-                lastNum = String.valueOf(c);
+                number.setChar(c);
             } else if (withWords) {
                 for (String s : map.keySet()) {
                     if (line.length() < i + s.length()) {
@@ -38,41 +54,12 @@ public class Day1 extends Day {
 
                     String substring = line.substring(i, i + s.length());
                     if (s.equals(substring)) {
-                        if (firstNum.isEmpty()) {
-                            firstNum = String.valueOf(map.get(s));
-                        }
-
-                        lastNum = String.valueOf(map.get(s));
+                        number.setInt(map.get(s));
                     }
                 }
             }
         }
 
-        return Integer.parseInt(firstNum + lastNum);
-    }
-
-    @Override
-    public int day() {
-        return 1;
-    }
-
-    @Override
-    public String partOne(List<String> input) {
-        int sum = 0;
-        for (String line : input) {
-            sum += findNumber(line, false);
-        }
-
-        return String.valueOf(sum);
-    }
-
-    @Override
-    public String partTwo(List<String> input) {
-        int sum = 0;
-        for (String line : input) {
-            sum += findNumber(line, true);
-        }
-
-        return String.valueOf(sum);
+        return number.toInt();
     }
 }
