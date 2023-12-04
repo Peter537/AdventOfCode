@@ -6,39 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Day4 extends Day {
-
-    private int getTimes(List<Integer> winningNumbers, List<Integer> myNumbers) {
-        int times = 0;
-        for (int num : myNumbers) {
-            if (winningNumbers.contains(num)) {
-                times += 1;
-            }
-        }
-
-        return times;
-    }
-
-    private int getPoints(Card card) {
-        int times = 0;
-        for (int num : card.myNumbers()) {
-            if (card.winningNumbers().contains(num)) {
-                times += 1;
-            }
-        }
-
-        int points = 0;
-        for (int i = 0; i < times; i++) {
-            if (i == 0) {
-                points += 1;
-            } else {
-                points *= 2;
-            }
-        }
-
-        return points;
-    }
 
     @Override
     public int day() {
@@ -47,31 +17,23 @@ public class Day4 extends Day {
 
     @Override
     public String partOne(List<String> input) {
-        int sum = 0;
-        for (String line : input) {
-            Card card = Card.fromLine(line);
-            sum += getPoints(card);
-        }
-
-        return String.valueOf(sum);
+        return input.stream()
+                .map(Card::fromLine)
+                .map(this::getPoints)
+                .reduce(0, Integer::sum).toString();
     }
 
     @Override
     public String partTwo(List<String> input) {
         int sum = 0;
-        Map<Integer, Card> cardMap = new LinkedHashMap<>();
-        for (String line : input) {
-            Card card = Card.fromLine(line);
-            cardMap.put(card.cardNumber(), card);
-        }
-
+        Map<Integer, Card> cardMap = createCardMap(input);
         Map<Integer, Integer> timesMap = new HashMap<>();
         Map<Integer, Integer> cardTimesMap = new HashMap<>();
         for (int cardNumber : cardMap.keySet()) {
             Card card = cardMap.get(cardNumber);
             int times = timesMap.getOrDefault(cardNumber, -1);
             if (times == -1) {
-                times = getTimes(card.winningNumbers(), card.myNumbers());
+                times = getTimes(card);
                 timesMap.put(cardNumber, times);
             }
 
@@ -92,5 +54,28 @@ public class Day4 extends Day {
         }
 
         return String.valueOf(sum);
+    }
+
+
+    private int getTimes(Card card) {
+        return card.myNumbers().stream()
+                .filter(number -> card.winningNumbers().contains(number))
+                .map(number -> 1)
+                .reduce(0, Integer::sum);
+    }
+
+    private int getPoints(Card card) {
+        return (int) Math.pow(2, getTimes(card) - 1);
+    }
+
+    private Map<Integer, Card> createCardMap(List<String> input) {
+        return input.stream()
+                .map(Card::fromLine)
+                .collect(Collectors.toMap(
+                        Card::cardNumber,
+                        card -> card,
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new
+                ));
     }
 }
