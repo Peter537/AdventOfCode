@@ -3,6 +3,7 @@ package dat.peter;
 import dat.peter.day1.Day1;
 import dat.peter.day2.Day2;
 import dat.peter.day3.Day3;
+import dat.peter.day4.Day4;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class Main {
         days.add(new Day1());
         days.add(new Day2());
         days.add(new Day3());
+        days.add(new Day4());
 
         days.forEach(Day::run);
     }
