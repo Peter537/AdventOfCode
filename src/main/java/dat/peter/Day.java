@@ -22,8 +22,16 @@ public abstract class Day {
 
     public final void run() {
         System.out.println("Day " + day());
-        System.out.println("| Part 1: " + partOne(getInputLines()));
-        System.out.println("| Part 2: " + partTwo(getInputLines()));
+        long start = System.currentTimeMillis();
+        String partOne = partOne(getInputLines());
+        long diff = System.currentTimeMillis() - start;
+        System.out.println("| Part 1: " + partOne);
+        System.out.println("|  > Took: " + diff + "ms");
+        start = System.currentTimeMillis();
+        String partTwo = partTwo(getInputLines());
+        diff = System.currentTimeMillis() - start;
+        System.out.println("| Part 2: " + partTwo);
+        System.out.println("|  > Took: " + diff + "ms");
         System.out.println();
     }
 
