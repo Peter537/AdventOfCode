@@ -3,12 +3,14 @@ package dat.peter.day4;
 import dat.peter.Day;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Day4 extends Day {
+
+    private final Map<Integer, Integer> timesMap = new HashMap<>();
+    private final Map<Integer, Integer> cardTimesMap = new HashMap<>();
 
     @Override
     public int day() {
@@ -25,35 +27,14 @@ public class Day4 extends Day {
 
     @Override
     public String partTwo(List<String> input) {
-        int sum = 0;
-        Map<Integer, Card> cardMap = createCardMap(input);
-        Map<Integer, Integer> timesMap = new HashMap<>();
-        Map<Integer, Integer> cardTimesMap = new HashMap<>();
-        for (int cardNumber : cardMap.keySet()) {
-            Card card = cardMap.get(cardNumber);
-            int times = timesMap.getOrDefault(cardNumber, -1);
-            if (times == -1) {
-                times = getTimes(card);
-                timesMap.put(cardNumber, times);
-            }
+        this.createCards(input)
+                .forEach(card -> {
+                    int times = this.getTimesFromMap(card);
+                    int currentTimes = this.getCurrentTimesFromMap(card);
+                    addCards(card, times, currentTimes);
+                });
 
-            int currentTimes = cardTimesMap.getOrDefault(cardNumber, -1);
-            if (currentTimes == -1) {
-                cardTimesMap.put(cardNumber, 1);
-                currentTimes = cardTimesMap.get(cardNumber);
-            }
-
-            for (int i = 1; i <= times; i++) {
-                int nextCardNumber = cardNumber + i;
-                cardTimesMap.put(nextCardNumber, cardTimesMap.getOrDefault(nextCardNumber, 1) + (currentTimes));
-            }
-        }
-
-        for (Map.Entry<Integer, Integer> entry : cardTimesMap.entrySet()) {
-            sum += entry.getValue();
-        }
-
-        return String.valueOf(sum);
+        return String.valueOf(getSumOfCardTimesMap());
     }
 
 
@@ -68,14 +49,41 @@ public class Day4 extends Day {
         return (int) Math.pow(2, getTimes(card) - 1);
     }
 
-    private Map<Integer, Card> createCardMap(List<String> input) {
+    private List<Card> createCards(List<String> input) {
         return input.stream()
                 .map(Card::fromLine)
-                .collect(Collectors.toMap(
-                        Card::cardNumber,
-                        card -> card,
-                        (existing, replacement) -> existing,
-                        LinkedHashMap::new
-                ));
+                .collect(Collectors.toList());
+    }
+
+    private int getTimesFromMap(Card card) {
+        int times = timesMap.getOrDefault(card.cardNumber(), -1);
+        if (times == -1) {
+            times = getTimes(card);
+            timesMap.put(card.cardNumber(), times);
+        }
+
+        return times;
+    }
+
+    private int getCurrentTimesFromMap(Card card) {
+        int currentTimes = cardTimesMap.getOrDefault(card.cardNumber(), -1);
+        if (currentTimes == -1) {
+            cardTimesMap.put(card.cardNumber(), 1);
+            currentTimes = cardTimesMap.get(card.cardNumber());
+        }
+
+        return currentTimes;
+    }
+
+    public void addCards(Card card, int times, int currentTimes) {
+        for (int i = 1; i <= times; i++) {
+            int nextCardNumber = card.cardNumber() + i;
+            cardTimesMap.put(nextCardNumber, cardTimesMap.getOrDefault(nextCardNumber, 1) + (currentTimes));
+        }
+    }
+
+    private int getSumOfCardTimesMap() {
+        return this.cardTimesMap.values().stream()
+                .reduce(0, Integer::sum);
     }
 }
