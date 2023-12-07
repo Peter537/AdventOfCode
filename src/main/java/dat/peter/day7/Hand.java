@@ -1,16 +1,14 @@
 package dat.peter.day7;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public record Hand(String hand, Type type, int bid) {
 
-    public static Hand fromLine(String line) {
+    public static Hand fromLine(String line, int part) {
         String[] split = line.split(" ");
         String hand = split[0];
-        Type type = getType(hand);
+        Type type = part == 1 ? getType1(hand) : getType2(hand);
         int bid = Integer.parseInt(split[1]);
         return new Hand(hand, type, bid);
     }
@@ -35,13 +33,41 @@ public record Hand(String hand, Type type, int bid) {
         }
     }
 
-    private static Type getType(String hand) {
-        String sortedHand = Arrays.stream(hand.split("")).sorted().collect(Collectors.joining());
-        Map<String, Integer> map = new LinkedHashMap<>();
-        for (String s : sortedHand.split("")) {
+    private static Type getType1(String hand) {
+        return type(getHandMap(hand), hand);
+    }
+
+    private static Type getType2(String hand) {
+        Map<String, Integer> map = getHandMap(hand);
+        if (map.containsKey("J") && map.size() > 1) {
+            String otherLargestChar = "";
+            int otherLargestAmount = 0;
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                if (!entry.getKey().equals("J")) {
+                    if (entry.getValue() > otherLargestAmount) {
+                        otherLargestChar = entry.getKey();
+                        otherLargestAmount = entry.getValue();
+                    }
+                }
+            }
+
+            map.put(otherLargestChar, map.get(otherLargestChar) + map.getOrDefault("J", 0));
+            map.remove("J");
+        }
+
+        return type(map, hand);
+    }
+
+    private static Map<String, Integer> getHandMap(String hand) {
+        Map<String, Integer> map = new HashMap<>();
+        for (String s : hand.split("")) {
             map.put(s, map.getOrDefault(s, 0) + 1);
         }
 
+        return map;
+    }
+
+    private static Type type(Map<String, Integer> map, String hand) {
         if (map.size() == 1) {
             return Type.fromHand("Five of a kind", 7, hand);
         } else if (map.size() == 2) {

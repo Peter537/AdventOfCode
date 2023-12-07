@@ -6,7 +6,7 @@ import java.util.Map;
 
 public record Type(String name, int valueType, int[] valueCards) {
 
-    private static final Map<String, Integer> CARD_VALUES = new HashMap<>(){
+    public static final Map<String, Integer> CARD_VALUES = new HashMap<>(){
         {
             put("2", 0);
             put("3", 1);
