@@ -6,6 +6,7 @@ import dat.peter.day3.Day3;
 import dat.peter.day4.Day4;
 import dat.peter.day5.Day5;
 import dat.peter.day6.Day6;
+import dat.peter.day7.Day7;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,8 @@ public class Main {
             new Day3(),
             new Day4(),
             new Day5(),
-            new Day6()
+            new Day6(),
+            new Day7()
     );
 
     public static void main(String[] args) {
