@@ -7,6 +7,7 @@ import dat.peter.day4.Day4;
 import dat.peter.day5.Day5;
 import dat.peter.day6.Day6;
 import dat.peter.day7.Day7;
+import dat.peter.day8.Day8;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,8 @@ public class Main {
             new Day4(),
             new Day5(),
             new Day6(),
-            new Day7()
+            new Day7(),
+            new Day8()
     );
 
     public static void main(String[] args) {
