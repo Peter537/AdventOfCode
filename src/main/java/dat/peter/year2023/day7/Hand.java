@@ -1,4 +1,4 @@
-package dat.peter.day7;
+package dat.peter.year2023.day7;
 
 import java.util.HashMap;
 import java.util.Map;

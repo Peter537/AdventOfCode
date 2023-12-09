@@ -1,4 +1,4 @@
-package dat.peter.day3;
+package dat.peter.year2023.day3;
 
 public record Symbol(char symbol, int x, int y) {
 

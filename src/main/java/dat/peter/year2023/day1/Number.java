@@ -1,4 +1,4 @@
-package dat.peter.day1;
+package dat.peter.year2023.day1;
 
 import lombok.NoArgsConstructor;
 

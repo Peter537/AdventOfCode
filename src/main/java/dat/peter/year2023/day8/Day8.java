@@ -1,6 +1,7 @@
-package dat.peter.day8;
+package dat.peter.year2023.day8;
 
 import dat.peter.Day;
+import dat.peter.utils.MathUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class Day8 extends Day {
             steps.add(getSteps(node, instructions, "Z"));
         }
 
-        return steps.stream().reduce(1L, this::lcm).toString();
+        return steps.stream().reduce(1L, MathUtils::lcm).toString();
     }
 
     public long getSteps(Node startNode, String[] instructions, String ending) {
@@ -63,17 +64,5 @@ public class Day8 extends Day {
         }
 
         return nodeMap;
-    }
-
-    private long lcm(long a, long b) {
-        return (a / gcd(a, b)) * b;
-    }
-
-    private long gcd(long a, long b) {
-        if (b == 0) {
-            return a;
-        } else {
-            return gcd(b, a % b);
-        }
     }
 }

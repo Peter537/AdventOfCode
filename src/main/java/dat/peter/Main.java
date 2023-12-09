@@ -1,14 +1,14 @@
 package dat.peter;
 
-import dat.peter.day1.Day1;
-import dat.peter.day2.Day2;
-import dat.peter.day3.Day3;
-import dat.peter.day4.Day4;
-import dat.peter.day5.Day5;
-import dat.peter.day6.Day6;
-import dat.peter.day7.Day7;
-import dat.peter.day8.Day8;
-import dat.peter.day9.Day9;
+import dat.peter.year2023.day1.Day1;
+import dat.peter.year2023.day2.Day2;
+import dat.peter.year2023.day3.Day3;
+import dat.peter.year2023.day4.Day4;
+import dat.peter.year2023.day5.Day5;
+import dat.peter.year2023.day6.Day6;
+import dat.peter.year2023.day7.Day7;
+import dat.peter.year2023.day8.Day8;
+import dat.peter.year2023.day9.Day9;
 
 import java.util.ArrayList;
 import java.util.Arrays;

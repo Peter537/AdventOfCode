@@ -1,4 +1,4 @@
-package dat.peter.day9;
+package dat.peter.year2023.day9;
 
 public record Sequence(long[] sequence) {
 

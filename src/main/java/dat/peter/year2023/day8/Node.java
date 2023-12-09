@@ -1,4 +1,4 @@
-package dat.peter.day8;
+package dat.peter.year2023.day8;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package dat.peter.day4;
+package dat.peter.year2023.day4;
 
 import java.util.ArrayList;
 import java.util.List;

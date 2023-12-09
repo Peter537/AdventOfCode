@@ -1,4 +1,4 @@
-package dat.peter.day6;
+package dat.peter.year2023.day6;
 
 public record Race(long raceLengthTime, long recordDistance) {
 

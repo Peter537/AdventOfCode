@@ -1,4 +1,4 @@
-package dat.peter.day6;
+package dat.peter.year2023.day6;
 
 import dat.peter.Day;
 
