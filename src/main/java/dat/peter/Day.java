@@ -16,28 +16,28 @@ public abstract class Day {
 
     public abstract String partTwo(List<String> input);
 
-    protected final List<String> getInputLines() {
-        return getInputLines(getInputFile());
+    protected final List<String> getInputLines(int year) {
+        return getInputLines(getInputFile(year));
     }
 
-    public final void run() {
+    public final void run(int year) {
         System.out.println("Day " + day());
         long start = System.currentTimeMillis();
-        String partOne = partOne(getInputLines());
+        String partOne = partOne(getInputLines(year));
         long diff = System.currentTimeMillis() - start;
         System.out.println("| Part 1: " + partOne);
         System.out.println("|  > Took: " + diff + "ms");
         start = System.currentTimeMillis();
-        String partTwo = partTwo(getInputLines());
+        String partTwo = partTwo(getInputLines(year));
         diff = System.currentTimeMillis() - start;
         System.out.println("| Part 2: " + partTwo);
         System.out.println("|  > Took: " + diff + "ms");
         System.out.println();
     }
 
-    private File getInputFile() {
+    private File getInputFile(int year) {
         try {
-            URL url = getClass().getResource("/day" + day() + ".txt");
+            URL url = getClass().getResource("/" + year + "/day" + day() + ".txt");
             if (url == null) {
                 throw new FileNotFoundException("Couldn't find input file day " + day());
             }
