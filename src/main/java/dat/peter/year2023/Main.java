@@ -1,5 +1,6 @@
-package dat.peter;
+package dat.peter.year2023;
 
+import dat.peter.Day;
 import dat.peter.year2023.day1.Day1;
 import dat.peter.year2023.day2.Day2;
 import dat.peter.year2023.day3.Day3;
@@ -55,6 +56,8 @@ public class Main {
             }
         }
 
-        days.forEach(Day::run);
+        days.forEach(day -> {
+            day.run(2023);
+        });
     }
 }
