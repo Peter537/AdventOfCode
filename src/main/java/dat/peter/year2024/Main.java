@@ -2,6 +2,7 @@ package dat.peter.year2024;
 
 import dat.peter.Day;
 import dat.peter.year2024.day1.Day1;
+import dat.peter.year2024.day2.Day2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,8 @@ import java.util.Scanner;
 public class Main {
 
     private final List<Day> DAY_MAP = List.of(
-            new Day1()
+            new Day1(),
+            new Day2()
     );
 
     public static void main(String[] args) {
